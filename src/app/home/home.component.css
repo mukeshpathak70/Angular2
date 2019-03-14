@@ -1,0 +1,7 @@
+.actionIcons{
+    margin: 0;
+    text-align: center;
+}
+.actionIcons span img{
+    width: 30px;
+}

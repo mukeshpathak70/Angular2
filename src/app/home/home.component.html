@@ -1,0 +1,58 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Employee Code</th>
+            <th>Email</th>
+            <th>Phone No.</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let employee of employeeData; let i = index">
+            <td>{{employee.preferredFullName}}</td>
+            <td>{{employee.employeeCode}}</td>
+            <td>{{employee.emailAddress}}</td>
+            <td>{{employee.phoneNumber}}</td>
+            <td><p class="actionIcons">
+                <span (click)="openEdit(employee,i)"><img src="../../assets/img/edit.png" alt="Edit"></span>
+                <span><img src="../../assets/img/delete.png" alt="Delete"></span>
+            </p></td>
+        </tr>
+    </tbody>
+</table>
+<div *ngIf="editEnabled" class="detailContainer col-md-4">
+    <form (ngSubmit)="saveEditedDetails()" [formGroup]="contactForm" novalidate>
+        <div class="form-content">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control" formControlName="fname" id="fname"/>
+        </div>
+        <div class="form-content">
+            <label for="lname">Last Name</label>
+            <input type="text" class="form-control" formControlName="lname" id="lname"/>
+        </div>
+        <div class="form-content">
+            <label for="email">Email Address</label>
+            <input type="text" class="form-control" formControlName="email"  id="email"/>
+        </div>
+        <div class="form-content">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" formControlName="phone" id="phone"/>
+        </div>
+        <div class="form-content">
+            <label for="region">Region</label>
+            <input type="text" class="form-control" formControlName="region" id="region"/>
+        </div>
+        <div class="form-content">
+            <label for="ecode">Employee Code</label>
+            <input type="text" class="form-control" formControlName="ecode" id="ecode"/>
+        </div>
+        <div class="form-content">
+            <label for="jtitle">Job Title</label>
+            <input type="text" class="form-control" formControlName="jtitle" id="jtitle"/>
+        </div>
+        <div class="form-submit">
+            <button type="submit" class="btn btn-info">Submit</button>
+        </div>
+    </form>
+</div>
