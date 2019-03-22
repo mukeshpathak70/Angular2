@@ -8,13 +8,13 @@ import Utils from '../config/utils.service';
 export class Home {
     contactForm : FormGroup;
     constructor(private configService : ConfigService, private formBuilder : FormBuilder) {}
-    public employeeData : any = [];
-    public editEnabled : boolean = false;
-    public newEmployeeEnabled : boolean = false;
-    public selectedIndex : number = 0;
-    public copyEmployeeDataForSearch : string = "";
-    public sortType : string = "asc";
-    public selectedSortColumn : string = "lastName"
+    public employeeData : any = []; //Main data
+    public editEnabled : boolean = false; // Variable to show and hide create and edit 
+    public newEmployeeEnabled : boolean = false; // Variable to detect edit or create
+    public selectedIndex : number = 0; // variable to detect which row is bieng edited
+    public copyEmployeeDataForSearch : string = "";//Variable to store data for search
+    public sortType : string = "asc";//Variable for sorting type
+    public selectedSortColumn : string = "lastName" // variable for storing column
     public validateForm : any = {
         firstName: true,
         lastName: true,
@@ -23,7 +23,9 @@ export class Home {
         region: true,
         employeeCode: true,
         jobTitleName: true
-    }
+    }//Object to show validation error
+
+    /* function to be called on load */
     ngOnInit() {
         this
             .configService
@@ -34,6 +36,7 @@ export class Home {
                 this.sortTable('firstName')
             });
     }
+    /* function to enable edit form */
     openEdit(item, i) {
         this.editEnabled = true;
         this.selectedIndex = i;
@@ -51,7 +54,8 @@ export class Home {
                     [Validators.required, CustomValidators.validateEmail]
                 ],
                 phoneNumber: [
-                    item.phoneNumber, [Validators.required, CustomValidators.validateNumber]
+                    item.phoneNumber,
+                    [Validators.required, CustomValidators.validateNumber]
                 ],
                 region: [
                     item.region, Validators.required
@@ -66,6 +70,7 @@ export class Home {
                 ]
             });
     }
+    /* function to open form forcreate new entry */
     openNewEmployee() {
         this.editEnabled = true;
         this.newEmployeeEnabled = true;
@@ -97,6 +102,7 @@ export class Home {
                 ]
             });
     }
+    /* function to save the form data */
     saveEditedDetails() {
         let controls = Object.keys(this.contactForm.controls);
         let validCount = 0;
@@ -104,11 +110,11 @@ export class Home {
             if (this.contactForm.controls[formElements].errors) {
                 this.validateForm[formElements] = false;
                 validCount++
-            }else{
-                this.validateForm[formElements]=true
+            } else {
+                this.validateForm[formElements] = true
             }
         });
-        if(validCount)
+        if (validCount) 
             return false;
         if (!this.newEmployeeEnabled) {
             this.editEnabled = false;
@@ -120,6 +126,7 @@ export class Home {
                 .push(this.contactForm.value)
         }
     };
+    /* function to delete the row */
     deleteEmployee(index) {
         if (this.editEnabled && this.selectedIndex == index) {
             alert("Cannot delete this row first close the edit form");
@@ -128,7 +135,9 @@ export class Home {
         this
             .employeeData
             .splice(index, 1);
+        this.copyEmployeeDataForSearch = JSON.stringify(this.employeeData);
     }
+    /* function to search data*/
     searchEmployee(value) {
         let dataForSearch = JSON.parse(this.copyEmployeeDataForSearch);
         dataForSearch = dataForSearch.filter(employee => {
@@ -139,18 +148,19 @@ export class Home {
         });
         this.employeeData = dataForSearch;
     }
-    sortTable(column){
-        if(this.selectedSortColumn == column){
-            if(this.sortType == "asc"){
+    /* function to sort data */
+    sortTable(column) {
+        if (this.selectedSortColumn == column) {
+            if (this.sortType == "asc") {
                 this.sortType = "dsc"
-            }else{
+            } else {
                 this.sortType = "asc"
             }
-        }else{
+        } else {
             this.selectedSortColumn = column;
             this.sortType = "asc"
         }
-        this.employeeData = Utils.sortTable(column,this.employeeData, this.sortType);
+        this.employeeData = Utils.sortTable(column, this.employeeData, this.sortType);
         console.log(this.employeeData)
     }
 }
