@@ -1,58 +1,93 @@
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Employee Code</th>
-            <th>Email</th>
-            <th>Phone No.</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let employee of employeeData; let i = index">
-            <td>{{employee.preferredFullName}}</td>
-            <td>{{employee.employeeCode}}</td>
-            <td>{{employee.emailAddress}}</td>
-            <td>{{employee.phoneNumber}}</td>
-            <td><p class="actionIcons">
-                <span (click)="openEdit(employee,i)"><img src="../../assets/img/edit.png" alt="Edit"></span>
-                <span><img src="../../assets/img/delete.png" alt="Delete"></span>
-            </p></td>
-        </tr>
-    </tbody>
-</table>
-<div *ngIf="editEnabled" class="detailContainer col-md-4">
-    <form (ngSubmit)="saveEditedDetails()" [formGroup]="contactForm" novalidate>
-        <div class="form-content">
-            <label for="fname">First Name</label>
-            <input type="text" class="form-control" formControlName="fname" id="fname"/>
+<div class="container">
+    <div class="addEmployeeButton">
+        <button title="Add Employee" (click)="openNewEmployee()"><i class="fas fa-plus"></i></button>
+    </div>
+    <div class="employeeTableContainer">
+        <div class="tableHeader">
+            <h4>Employee Details</h4>
+            <input type="text" #searchInput placeholder="Search" (input)="searchEmployee(searchInput.value)">
         </div>
-        <div class="form-content">
-            <label for="lname">Last Name</label>
-            <input type="text" class="form-control" formControlName="lname" id="lname"/>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th (click)="sortTable('firstName')">Name<i
+                            *ngIf="sortType=='asc' && selectedSortColumn=='firstName'" class="fas fa-sort-up"></i> <i
+                            *ngIf="sortType=='dsc' && selectedSortColumn=='firstName'"
+                            class="fas fa-sort-down"></i></th>
+                    <th (click)="sortTable('employeeCode')">Employee Code<i
+                        *ngIf="sortType=='asc' && selectedSortColumn=='employeeCode'" class="fas fa-sort-up"></i> <i
+                        *ngIf="sortType=='dsc' && selectedSortColumn=='employeeCode'"
+                        class="fas fa-sort-down"></i></th>
+                    <th (click)="sortTable('emailAddress')">Email<i
+                        *ngIf="sortType=='asc' && selectedSortColumn=='emailAddress'" class="fas fa-sort-up"></i> <i
+                        *ngIf="sortType=='dsc' && selectedSortColumn=='emailAddress'"
+                        class="fas fa-sort-down"></i></th>
+                    <th (click)="sortTable('phoneNumber')">Phone No.<i
+                        *ngIf="sortType=='asc' && selectedSortColumn=='phoneNumber'" class="fas fa-sort-up"></i> <i
+                        *ngIf="sortType=='dsc' && selectedSortColumn=='phoneNumber'"
+                        class="fas fa-sort-down"></i></th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let employee of employeeData; let i = index">
+                    <td>{{employee.firstName +" "+ employee.lastName}}</td>
+                    <td>{{employee.employeeCode}}</td>
+                    <td>{{employee.emailAddress}}</td>
+                    <td>{{employee.phoneNumber}}</td>
+                    <td>
+                        <p class="actionIcons">
+                            <span title="Edit" (click)="openEdit(employee,i)"><i class="fas fa-pencil-alt"></i></span>
+                            <span title="Delete" (click)="deleteEmployee(i)"><i class="fas fa-trash-alt"></i></span>
+                        </p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row justify-content-center">
+        <div *ngIf="editEnabled" class="detailContainer col-md-4">
+            <i (click)="editEnabled = false" class="fas fa-times"></i>
+            <form (ngSubmit)="saveEditedDetails()" [formGroup]="contactForm" novalidate>
+                <div class="form-content">
+                    <label for="firstName">First Name</label>
+                    <p class="errorMsg" *ngIf="!validateForm.firstName"> Please enter first name</p>
+                    <input type="text" class="form-control" formControlName="firstName" id="firstName" />
+                </div>
+                <div class="form-content">
+                    <label for="lastName">Last Name</label>
+                    <p class="errorMsg" *ngIf="!validateForm.lastName"> Please enter last name</p>
+                    <input type="text" class="form-control" formControlName="lastName" id="lastName" />
+                </div>
+                <div class="form-content">
+                    <label for="emailAddress">Email Address</label>
+                    <p class="errorMsg" *ngIf="!validateForm.emailAddress"> Please enter valid email</p>
+                    <input type="text" class="form-control" formControlName="emailAddress" id="emailAddress" />
+                </div>
+                <div class="form-content">
+                    <label for="phoneNumber">Phone Number</label>
+                    <p class="errorMsg" *ngIf="!validateForm.phoneNumber"> Please enter mobile number</p>
+                    <input type="text" class="form-control" formControlName="phoneNumber" id="phoneNumber" />
+                </div>
+                <div class="form-content">
+                    <label for="region">Region</label>
+                    <p class="errorMsg" *ngIf="!validateForm.region"> Please enter region</p>
+                    <input type="text" class="form-control" formControlName="region" id="region" />
+                </div>
+                <div class="form-content">
+                    <label for="employeeCode">Employee Code</label>
+                    <p class="errorMsg" *ngIf="!validateForm.employeeCode"> Please enter employee code</p>
+                    <input type="text" class="form-control" formControlName="employeeCode" id="employeeCode" />
+                </div>
+                <div class="form-content">
+                    <label for="jobTitleName">Job Title</label>
+                    <p class="errorMsg" *ngIf="!validateForm.employeeCode"> Please enter job title</p>
+                    <input type="text" class="form-control" formControlName="jobTitleName" id="jobTitleName" />
+                </div>
+                <div class="form-submit text-center mt-3">
+                    <button type="submit" class="btn btn-info">Submit</button>
+                </div>
+            </form>
         </div>
-        <div class="form-content">
-            <label for="email">Email Address</label>
-            <input type="text" class="form-control" formControlName="email"  id="email"/>
-        </div>
-        <div class="form-content">
-            <label for="phone">Phone Number</label>
-            <input type="text" class="form-control" formControlName="phone" id="phone"/>
-        </div>
-        <div class="form-content">
-            <label for="region">Region</label>
-            <input type="text" class="form-control" formControlName="region" id="region"/>
-        </div>
-        <div class="form-content">
-            <label for="ecode">Employee Code</label>
-            <input type="text" class="form-control" formControlName="ecode" id="ecode"/>
-        </div>
-        <div class="form-content">
-            <label for="jtitle">Job Title</label>
-            <input type="text" class="form-control" formControlName="jtitle" id="jtitle"/>
-        </div>
-        <div class="form-submit">
-            <button type="submit" class="btn btn-info">Submit</button>
-        </div>
-    </form>
+    </div>
 </div>

@@ -8,18 +8,16 @@ import {ConfigService} from './config/config.service'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //Costom routes 
 import {Home} from './home/home.component';
-import {About} from './about/about.component'
 
 const appRoutes: Routes = [
-  {path:"home", component:Home},
-  {path:"about", component:About}
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {path:"home", component:Home}
 
 ]
 @NgModule({
   declarations: [
     AppComponent,
-    Home,
-    About
+    Home
   ],
   imports: [
     BrowserModule,
